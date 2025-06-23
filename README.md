@@ -10,7 +10,7 @@ View the live site on Netlify
 ## 📚 Repository
 
 You can find the full source code on GitHub:  
-👉 [Shared-Bookmarks-Piscine]()
+👉 [Shared-Bookmarks-Piscine](https://github.com/Priscilla-EM/Shared-Bookmarks-Piscine)
 
 ## 📂 Project Structure
 ├── index.html
