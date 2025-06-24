@@ -12,9 +12,11 @@ window.onload = function () {
 };
 */
 
-import { getUserIds } from "./storage.js";
+import { getUserIds, getData } from "./storage.js";
 
 const userSelect = document.getElementById("user-select");
+const bookmarkContainer = document.getElementById("bookmark-container");
+
 
 function populateUserDropdown() {
   // Get all user IDs from storage
@@ -28,6 +30,56 @@ function populateUserDropdown() {
     userSelect.appendChild(option);
   });
 }
+
+// Render bookmarks in reverse order
+function renderBookmarks(bookmarks) {
+  // Clear old content
+  bookmarkContainer.innerHTML = "";
+
+  if (!bookmarks || bookmarks.length === 0) {
+    bookmarkContainer.textContent = "No bookmarks found for this user.";
+    return;
+  }
+
+  // Sort bookmarks by timestamp from newest to oldest
+  const sorted = [...bookmarks].sort((a, b) => b.timestamp - a.timestamp);
+
+  // Create a list (ul) element
+  const list = document.createElement("ul");
+
+  // Loop through sorted bookmarks and build the list
+  sorted.forEach((bookmark) => {
+    const li = document.createElement("li");
+
+    const link = document.createElement("a");
+    link.href = bookmark.url;
+    link.textContent = bookmark.title;
+    link.target = "_blank"; // opens in a new tab
+
+    const description = document.createElement("p");
+    description.textContent =
+      bookmark.description || "No description provided.";
+
+    const timestamp = document.createElement("small");
+    const date = new Date(bookmark.timestamp); // convert number to Date
+    timestamp.textContent = `Saved on: ${date.toLocaleString()}`;
+
+    li.appendChild(link);
+    li.appendChild(description);
+    li.appendChild(timestamp);
+    list.appendChild(li);
+  });
+
+  // Add the list to the page
+  bookmarkContainer.appendChild(list);
+}
+
+// When a user is selected from dropdown
+userSelect.addEventListener("change", () => {
+  const userId = userSelect.value;
+  const bookmarks = getData(userId);
+  renderBookmarks(bookmarks);
+});
 
 window.onload = function () {
   populateUserDropdown();
