@@ -1,22 +1,20 @@
-// This is a placeholder file which shows how you can access functions defined in other files.
-// It can be loaded into index.html.
-// You can delete the contents of the file once you have understood how it works.
-// Note that when running locally, in order to open a web page which uses modules, you must serve the directory over HTTP e.g. with https://www.npmjs.com/package/http-server
-// You can't open the index.html file using a file:// URL.
-/*
-import { getUserIds } from "./storage.js";
+import { getUserIds, getData, setData } from "./storage.js";
 
-window.onload = function () {
-  const users = getUserIds();
-  document.querySelector("body").innerText = `There are ${users.length} users`;
-};
-*/
-
-import { getUserIds, getData } from "./storage.js";
+function getValidBookmarks(userId) {
+  const rawData = getData(userId);
+  if (Array.isArray(rawData)) {
+    return rawData;
+  } else {
+    console.warn(
+      `Invalid bookmarks data for user ${userId}. Using empty array.`
+    );
+    return [];
+  }
+}
 
 const userSelect = document.getElementById("user-select");
 const bookmarkContainer = document.getElementById("bookmark-container");
-
+const form = document.getElementById("bookmark-form");
 
 function populateUserDropdown() {
   // Get all user IDs from storage
@@ -35,6 +33,11 @@ function populateUserDropdown() {
 function renderBookmarks(bookmarks) {
   // Clear old content
   bookmarkContainer.innerHTML = "";
+
+  if (!Array.isArray(bookmarks)) {
+    console.error("Invalid bookmarks data.");
+    bookmarks = [];
+  }
 
   if (!bookmarks || bookmarks.length === 0) {
     bookmarkContainer.textContent = "No bookmarks found for this user.";
@@ -61,8 +64,8 @@ function renderBookmarks(bookmarks) {
       bookmark.description || "No description provided.";
 
     const timestamp = document.createElement("small");
-    const date = new Date(bookmark.timestamp); // convert number to Date
-    timestamp.textContent = `Saved on: ${date.toLocaleString()}`;
+    const date = new Date(bookmark.timestamp); // convert number to Date object
+    timestamp.textContent = `Saved on: ${date.toLocaleString()}`; // turns timestamp into a readable format
 
     li.appendChild(link);
     li.appendChild(description);
@@ -77,10 +80,47 @@ function renderBookmarks(bookmarks) {
 // When a user is selected from dropdown
 userSelect.addEventListener("change", () => {
   const userId = userSelect.value;
-  const bookmarks = getData(userId);
+  const bookmarks = getValidBookmarks(userId); // Load bookmarks for the selected user or initialize an empty array
   renderBookmarks(bookmarks);
 });
+// Populate the user dropdown on page load
+populateUserDropdown();
 
-window.onload = function () {
-  populateUserDropdown();
-};
+// Handle form submission to add a new bookmark
+form.addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent page reload
+  console.log("Form submitted");
+
+  const userId = userSelect.value;
+  if (!userId) {
+    alert("Please select a user first.");
+    return;
+  }
+
+  const url = document.getElementById("url").value.trim();
+  const title = document.getElementById("title").value.trim();
+  const description = document.getElementById("description").value.trim();
+
+  // Validate URL and Title
+  if (!url || !title) {
+    alert("URL and Title are required!");
+    return;
+  }
+
+  // Create a new bookmark object
+  const newBookmark = {
+    url,
+    title,
+    description,
+    timestamp: Date.now(),
+  };
+
+  const existingBookmarks = getValidBookmarks(userId); // Load existing bookmarks or initialize an empty array
+  const updatedBookmarks = [...existingBookmarks, newBookmark]; // Add the new bookmark to the existing ones
+
+  setData(userId, updatedBookmarks); // Save updated bookmarks back to storage
+  alert("Bookmark saved successfully!"); // Notify user of success
+  renderBookmarks(updatedBookmarks); // Render the updated bookmarks
+
+  form.reset(); // clear the form fields
+});
