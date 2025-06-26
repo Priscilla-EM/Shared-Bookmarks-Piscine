@@ -1,16 +1,6 @@
 import { getUserIds, getData, setData } from "./storage.js";
+import { getValidBookmarks } from "./getValidBookmarks.js";
 
-function getValidBookmarks(userId) {
-  const rawData = getData(userId);
-  if (Array.isArray(rawData)) {
-    return rawData;
-  } else {
-    console.warn(
-      `Invalid bookmarks data for user ${userId}. Using empty array.`
-    );
-    return [];
-  }
-}
 
 const userSelect = document.getElementById("user-select");
 const bookmarkContainer = document.getElementById("bookmark-container");
