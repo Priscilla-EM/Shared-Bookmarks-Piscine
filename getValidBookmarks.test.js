@@ -1,21 +1,20 @@
-// getValidBookmarks.test.js
 import { jest } from "@jest/globals";
 
-// 1. Mock storage.js first
+// Mock storage.js
 jest.unstable_mockModule("./storage.js", () => ({
   getData: jest.fn(),
 }));
 
-// 2. Now dynamically import both modules after mocking
-const { getData } = await import("./storage.js");
-const { getValidBookmarks } = await import("./getValidBookmarks.js");
+// import both modules after mocking
+const { getData } = await import("./storage.js"); 
+const { getValidBookmarks } = await import("./getValidBookmarks.js"); 
 
 describe("getValidBookmarks", () => {
-  it("returns bookmarks if data is a valid array", () => {
+  it("returns bookmarks if data is a valid array", () => { 
     const mockBookmarks = [
       { url: "https://example.com", title: "Example", timestamp: 123456 },
     ];
-    getData.mockReturnValue(mockBookmarks); // now this will work
+    getData.mockReturnValue(mockBookmarks); 
     const result = getValidBookmarks("user1");
     expect(result).toEqual(mockBookmarks);
   });
