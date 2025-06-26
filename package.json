@@ -1,0 +1,25 @@
+{
+  "name": "shared-bookmarks-piscine",
+  "version": "1.0.0",
+  "description": "A simple JavaScript-only web application to create, store, and share bookmarks across different users.",
+  "main": "getValidBookmarks.test.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Priscilla-EM/Shared-Bookmarks-Piscine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Priscilla-EM/Shared-Bookmarks-Piscine/issues"
+  },
+  "homepage": "https://github.com/Priscilla-EM/Shared-Bookmarks-Piscine#readme",
+  "devDependencies": {
+    "jest": "^30.0.3",
+    "jest-environment-jsdom": "^30.0.2"
+  }
+}
