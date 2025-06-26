@@ -80,7 +80,7 @@ function renderBookmarks(bookmarks) {
 // When a user is selected from dropdown
 userSelect.addEventListener("change", () => {
   const userId = userSelect.value;
-  const bookmarks = getValidBookmarks(userId); // Load bookmarks for the selected user or initialize an empty array
+  const bookmarks = getValidBookmarks(userId); // Load bookmarks for the selected user
   renderBookmarks(bookmarks);
 });
 // Populate the user dropdown on page load
@@ -89,7 +89,6 @@ populateUserDropdown();
 // Handle form submission to add a new bookmark
 form.addEventListener("submit", function (event) {
   event.preventDefault(); // Prevent page reload
-  console.log("Form submitted");
 
   const userId = userSelect.value;
   if (!userId) {
@@ -115,7 +114,7 @@ form.addEventListener("submit", function (event) {
     timestamp: Date.now(),
   };
 
-  const existingBookmarks = getValidBookmarks(userId); // Load existing bookmarks or initialize an empty array
+  const existingBookmarks = getValidBookmarks(userId); // Load existing bookmarks 
   const updatedBookmarks = [...existingBookmarks, newBookmark]; // Add the new bookmark to the existing ones
 
   setData(userId, updatedBookmarks); // Save updated bookmarks back to storage
